@@ -1,0 +1,42 @@
+version: "3.10"
+
+services:
+  redis:
+    image: redis:7
+    restart: always
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - redis_volume:/var/lib/redis/data
+
+  p2p-sender-signaling-server-postgres:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_DB=p2p-sender-signaling-server
+      - POSTGRES_USER=p2p-sender-signaling-server
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - postgres_volume:/var/lib/postgresql
+
+  signaling-server:
+    depends_on:
+      - p2p-sender-signaling-server-postgres
+    restart: always
+    build:
+      context: services/signaling-server
+      target: development
+    ports:
+      - "18000:8000"
+    volumes:
+      - ./services/server:/server
+    command: >
+      bash -c "python manage.py migrate
+      && python manage.py runserver 0.0.0.0:8000"
+
+
+volumes:
+  postgres_volume:
+  redis_volume:
