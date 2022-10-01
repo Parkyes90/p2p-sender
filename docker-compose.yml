@@ -29,9 +29,9 @@ services:
       context: services/signaling-server
       target: development
     ports:
-      - "18000:8000"
+      - "8888:8000"
     volumes:
-      - ./services/server:/server
+      - ./services/signaling-server:/server
     command: >
       bash -c "python manage.py migrate
       && python manage.py runserver 0.0.0.0:8000"
