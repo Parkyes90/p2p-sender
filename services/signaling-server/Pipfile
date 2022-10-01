@@ -13,6 +13,7 @@ djangorestframework = "*"
 channels = "*"
 channels-redis = "*"
 uvicorn = {extras = ["standard"], version = "*"}
+django-redis = "*"
 
 [dev-packages]
 
