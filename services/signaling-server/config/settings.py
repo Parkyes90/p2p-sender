@@ -80,15 +80,17 @@ ASGI_APPLICATION = "config.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DEFAULT_DATABASE = {
-    "ENGINE": "psqlextra.backend",
-    "NAME": "p2p-sender-signaling-server",
-    "USER": "p2p-sender-signaling-server",
-    "HOST": "p2p-sender-signaling-server-postgres",
-    "PORT": 5432,
-    "PASSWORD": "local-password",
-}
 
+DATABASES = {
+    "default": {
+        "ENGINE": "psqlextra.backend",
+        "NAME": "p2p-sender-signaling-server",
+        "USER": "p2p-sender-signaling-server",
+        "HOST": "p2p-sender-signaling-server-postgres",
+        "PORT": 5432,
+        "PASSWORD": "local-password",
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
