@@ -14,6 +14,7 @@ from channels.auth import AuthMiddlewareStack
 
 django.setup()
 
+from apps.download_channels import routing as download_channels_routing
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
 from django.contrib.staticfiles.handlers import ASGIStaticFilesHandler
@@ -23,12 +24,17 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
 django_asgi_app = ASGIStaticFilesHandler(get_asgi_application())
 
-
 application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,
         "websocket": (
-            AllowedHostsOriginValidator((AuthMiddlewareStack(URLRouter([]))))
+            AllowedHostsOriginValidator(
+                (
+                    AuthMiddlewareStack(
+                        URLRouter(download_channels_routing.websocket_urlpatterns)
+                    )
+                )
+            )
         ),
     }
 )
