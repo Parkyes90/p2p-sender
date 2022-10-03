@@ -44,11 +44,14 @@ services:
     volumes:
       - /web-client/node_modules/
       - ./services/web-client:/web-client
-
+    environment:
+      - WDS_SOCKET_HOST=0.0.0.0
+      - WDS_SOCKET_PORT=0
   proxy:
     image: nginx:latest
     depends_on:
       - signaling-server
+      - web-client
     restart: always
     volumes:
       - ./services/proxy/proxy.conf:/etc/nginx/proxy.conf
