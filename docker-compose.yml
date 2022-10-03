@@ -28,13 +28,22 @@ services:
     build:
       context: services/signaling-server
       target: development
-    ports:
-      - "8888:8000"
     volumes:
       - ./services/signaling-server:/server
     command: >
       bash -c "python manage.py migrate
       && python manage.py runserver 0.0.0.0:8000"
+
+  web-client:
+    depends_on:
+      - signaling-server
+    restart: always
+    build:
+      context: services/web-client
+      target: development
+    volumes:
+      - /web-client/node_modules/
+      - ./services/web-client:/web-client
 
   proxy:
     image: nginx:latest
