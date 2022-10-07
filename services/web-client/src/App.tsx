@@ -1,5 +1,6 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import DownloadChannelDetailPage from "./pages/download-channels/detail";
 
 const router = createBrowserRouter([
   {
@@ -8,7 +9,7 @@ const router = createBrowserRouter([
   },
   {
     path: "download-files/:downloadId",
-    element: <div>download file</div>,
+    element: <DownloadChannelDetailPage />,
   },
 ]);
 
