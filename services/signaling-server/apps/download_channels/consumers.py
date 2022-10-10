@@ -20,13 +20,14 @@ class DownloadChannelConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data=None, bytes_data=None):
         try:
             serialized_data = json.loads(text_data)
-            if serialized_data["type"] == self.entrance.__name__:
-                await self.channel_layer.group_send(
-                    self.group_name,
-                    {"type": self.entrance.__name__, "message": self.entrance.__name__},
-                )
+            event = getattr(self, serialized_data["type"], None)
+            if event:
+                await event(serialized_data)
         except json.decoder.JSONDecodeError:
             pass
+
+    async def offer(self, event):
+        await self.send(text_data=json.dumps(event))
 
     async def disconnect(self, code):
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
