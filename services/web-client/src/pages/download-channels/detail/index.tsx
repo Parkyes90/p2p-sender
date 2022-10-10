@@ -10,12 +10,27 @@ interface DownloadChannelDetailPageParams extends Record<string, string> {
 function DownloadChannelDetailPage() {
   const { downloadId } = useParams<DownloadChannelDetailPageParams>();
   const websocketProtocol = useWebsocketProtocol();
-  const { lastMessage, readyState } = useWebSocket(
+  const { lastMessage, readyState, sendMessage } = useWebSocket(
     `${websocketProtocol}://${window.location.host}/ws/download-channels/${downloadId}/`
   );
   useEffect(() => {
-    console.log(lastMessage, readyState);
-  }, [lastMessage, readyState]);
+    const myPeerConnection = new RTCPeerConnection({
+      iceServers: [
+        {
+          urls: [
+            "stun:stun.l.google.com:19302",
+            "stun:stun1.l.google.com:19302",
+            "stun:stun2.l.google.com:19302",
+            "stun:stun3.l.google.com:19302",
+            "stun:stun4.l.google.com:19302",
+          ],
+        },
+      ],
+    });
+    myPeerConnection.addEventListener("icecandidate", (data) => {
+      console.log("Got Ice Candidate", data);
+    });
+  }, [sendMessage, lastMessage, readyState]);
   return <div>DownloadChannelDetailPage {downloadId}</div>;
 }
 
